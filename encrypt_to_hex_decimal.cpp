@@ -9,6 +9,9 @@
 #include <cstdlib>
 #include <iomanip>
 
+
+
+
 std::string replace_equal_digits(int keyd_,int last_int_of_key_){//makes a function for equal ints in the encrypted string to be replaced by a symbol
     std::string keyd_string = std::to_string(keyd_);//converts one encrypted hexadeciaml part of the whole encrypted string to a string
     std::stringstream new_replaced_symbol_stringstream;//creates a new stringstream in which to replace the ints in 
@@ -25,41 +28,7 @@ std::string replace_equal_digits(int keyd_,int last_int_of_key_){//makes a funct
     return new_replaced_symbol_string;//returns the new string
 }
 
-std::string replace_equal_symbols(int last_int_of_key, std::string encrypted_txt){//sets up a function to change the symbols in the to_encrypt string back to the last int of the key
-    std::stringstream replaced_to_encrypt;//sets up a stringstream for the replaced symbols
-    for(char c:encrypted_txt){//loops through the characters of the encrypted text
-        if(c=='@'){//checks if the character is a symbol
-            replaced_to_encrypt<<last_int_of_key;//adds the last int of the key to the stringstream
-        }
-        else{
-            replaced_to_encrypt<<c;//the rest of the characters get added back
-        }
-    }
-    std::string replaced_to_encrypt_string = replaced_to_encrypt.str();//converts the stringstream to a string
-    return replaced_to_encrypt_string;//returns the newly replaced symbols string
-}
-std::pair<int,int> get_key(std::string key){//sets up a function 
-    std::stringstream converted_key;//creates a stringstream for the making of the converted key
-    for(char c: key){//loops over the characters inside the key string
-        if(isalpha(c)){//checks if the character represents an int
-            int to_ascii =  static_cast<int>(c);//converts the character int to its decimal value
-            std::string string_to_ascii = std::to_string(to_ascii);//converts the newly converted to decimal character of the key into a string
-            int sum = 0;//creates 
-            for(char digit:string_to_ascii){
-                int real_digit = digit - '0'; // Convert character to integer
-                sum += real_digit;
-            }
-            converted_key<<sum;
-        }
-        if(isdigit(c)){
-            converted_key<<c;
-        }
-    }
-    std::string acquired_key = converted_key.str();
-    int last_int_of_key = acquired_key[acquired_key.size()-1] - '0';
-    int key_for_use = std::stoi(acquired_key);
-    return std::make_pair(last_int_of_key,key_for_use);
-}
+
 std::string encrypt_to_hex_decimal(std::string to_encrypt, std::string key){//main function to encrypt the "to_encrypt" text with the "key" as the key
     std::stringstream end_string;//sets up a stringstream in which all of the encrypted parts of the text will be inserted into
     std::stringstream converted_to_hex;//sets up a seperate stringstream in which all of the characters of the original string will be converted to hex
@@ -73,9 +42,9 @@ std::string encrypt_to_hex_decimal(std::string to_encrypt, std::string key){//ma
     }
     to_encrypt = converted_to_hex.str();//replaces the original "to_encrypt" string with the newly converted hex string
     
-    std::pair<int,int> gotten_keys = get_key(key);
-    int last_int_of_key = gotten_keys.first;
-    int key_for_use = gotten_keys.second;
+    
+    int last_int_of_key = 7;
+    int key_for_use = 437;
     //converts the character in char_list into an int
     int extra_encr = 1;
     if(og_size>1){
@@ -121,36 +90,7 @@ std::string encrypt_to_hex_decimal(std::string to_encrypt, std::string key){//ma
 }
 
 
-int return_length_of_decryptable_string(std::string to_decrypt){
-    
-    std::stringstream length_of_to_decrypt_string_stringstream;
-    for(int i = 0;i<to_decrypt.length();i++){
-        if(to_decrypt[i]=='*'){
-            for(int j = i+1;j<to_decrypt.length();j++){
-                length_of_to_decrypt_string_stringstream<<to_decrypt[j];
-            }
-            break;
-        }
-    }
-    std::string length_of_to_decrypt_string_stringstream_string = length_of_to_decrypt_string_stringstream.str();
-    int length_of_to_decrypt_string= std::stoi(length_of_to_decrypt_string_stringstream_string);
-    return length_of_to_decrypt_string;
-}
-
-
-std::string decrypt(std::string to_decrypt,std::string key){
-    std::pair<int,int> gotten_keys = get_key(key);
-    int last_int_of_key = gotten_keys.first;
-    int key_for_use = gotten_keys.second;
-    to_decrypt = replace_equal_symbols(last_int_of_key,to_decrypt);
-    int length_of_to_decrypt = return_length_of_decryptable_string(to_decrypt);
-    /*
-    Make loop to go through the to_decrypt string by increments of the length_of_to_decrypt
-    and check if can be divisible by formula when next to a letter, or if 
-    */
-}
-
-int main() {
+int main(){
     int choice;
     std::string encryption_key;
     std::cout<<"Enter encryption key: ";
@@ -166,6 +106,4 @@ int main() {
         std::cout<<encrypt_to_hex_decimal(to_encrypt,encryption_key)<<"\n";
         system("pause");
     }
-    
 }
-
