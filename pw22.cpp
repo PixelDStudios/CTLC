@@ -79,13 +79,13 @@ std::string encrypt_to_hex_decimal(std::string to_encrypt, std::string key){//ma
     //converts the character in char_list into an int
     int extra_encr = 1;
     if(og_size>1){
-        for(int i = 0;i<og_size-1;i++){
+        for(int i = 0;i<og_size*2-1;i++){
             if(i<to_encrypt.size()-1){
                 if(isdigit(to_encrypt[i])){
                     if(isdigit(to_encrypt[i+1])){
                         int num_1 = (to_encrypt[i] - '0') * 10;
                         int num_2 =  (to_encrypt[i + 1] - '0') * (i+1) ;
-                        end_string<<num_1<<num_2<<"_";
+                        end_string<<num_1<<"&"<<num_2<<"_";
                         i++;
                     }
                     if(isalpha(to_encrypt[i+1])){
