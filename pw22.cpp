@@ -9,8 +9,10 @@
 #include <cctype>
 #include <cstdlib>
 #include <iomanip>
+#include  <bits/stdc++.h>
 
-
+//TODO 1.Make get_key symbol (/ utt.) conversion to decimal
+//TODO 3.Add function to customize operations with to_encrypt/to_decrypt (Save operations in a list in a seperate file)
 std::string replace_equal_digits(int keyd_,int last_int_of_key_,std::string symbol){//makes a function for equal ints in the encrypted string to be replaced by a symbol
     std::string keyd_string = std::to_string(keyd_);//converts one encrypted hexadeciaml part of the whole encrypted string to a stringstd::string symbol = "@";
     std::stringstream new_replaced_symbol_stringstream;//creates a new stringstream in which to replace the ints in 
@@ -57,6 +59,7 @@ std::string replace_equal_symbols(int last_int_of_key, std::string encrypted_txt
     return replaced_to_decrypt_string;//returns the newly replaced symbols string
 }
 std::pair<int,int> get_key(std::string key){//sets up a function 
+    int last_int_of_key_1 = key[key.length()-1];
     std::stringstream converted_key;//creates a stringstream for the making of the converted key
     for(char c: key){//loops over the characters inside the key string
         if(isalpha(c)){//checks if the character represents an int
@@ -69,7 +72,10 @@ std::pair<int,int> get_key(std::string key){//sets up a function
             }
             converted_key<<sum;
         }
-        if(isdigit(c)){
+        else if(isdigit(c)&&c!=last_int_of_key_1){
+            converted_key<<c*3;
+        }
+        else{
             converted_key<<c;
         }
     }
@@ -83,9 +89,9 @@ std::string encrypt_to_hex_decimal(std::string to_encrypt, std::string key,std::
     std::stringstream converted_to_hex;//sets up a seperate stringstream in which all of the characters of the original string will be converted to hex
     
     
-    
+    /*
     int og_size = to_encrypt.length();//saves the size of the og string to be used later in decryption
-    
+    */
     for(char character:to_encrypt){//loops over the characters in the original string
         converted_to_hex<<std::hex<<std::setw(2)<<std::setfill('0')<<static_cast<int>(static_cast<unsigned char>(character));//formats a hex value of a max length of 2 with the filler being 0 and first casts character to unsigned char and then to an int
     }
@@ -96,8 +102,8 @@ std::string encrypt_to_hex_decimal(std::string to_encrypt, std::string key,std::
     int key_for_use = gotten_keys.second;
     //converts the character in char_list into an int
     int extra_encr = 1;
-    if(og_size>1){
-        for(int i = 0;i<og_size*2-1;i++){
+    if(to_encrypt.length()>1){
+        for(int i = 0;i<to_encrypt.length()*2-1;i++){
             if(i<to_encrypt.size()-1){
                 if(isdigit(to_encrypt[i])){
                     if(isdigit(to_encrypt[i+1])){
@@ -132,7 +138,7 @@ std::string encrypt_to_hex_decimal(std::string to_encrypt, std::string key,std::
         std::cout<<"Error: password too short";
     }
     std::string pre_final = end_string.str();
-    end_string<<"*"<<og_size;
+    end_string<<"*";
     
     std::string final_result = end_string.str();
     
@@ -150,10 +156,7 @@ int return_length_of_decryptable_string(std::string to_decrypt){
         }
         length_of_to_decrypt_string_stringstream+=1;
     }
-    /*
-    std::string length_of_to_decrypt_string_stringstream_string = length_of_to_decrypt_string_stringstream.str();
-    int length_of_to_decrypt_string= std::stoi(length_of_to_decrypt_string_stringstream_string);
-    */
+    
     return length_of_to_decrypt_string_stringstream;
 }
 
@@ -219,13 +222,9 @@ std::string decrypt(std::string to_decrypt,std::string key,std::string symbol){
     
     
     return hexToAscii(end_string.str());
-    //45448a1748&6_1748&5_2185&0_2185&63_509542f2185&0_2185&30_*8
-    /*
-    Make loop to go through the to_decrypt string by increments of the length_of_to_decrypt
-    and check if can be divisible by formula when next to a letter, or if 
-    */
+    
 }
-// Helper function to convert a hexadecimal string to an ASCII character
+
 
 enum class Command {
     Commands,
@@ -237,11 +236,11 @@ enum class Command {
 };
 
 Command getCommand(const std::string& input) {
+    if (input == "decrypt") return Command::Decrypt;
     if (input == "exit") return Command::Exit;
     if (input == "copy") return Command::Copy;
     if (input == "Commands") return Command::Commands;
-    if (input == "encrypt") return Command::Encrypt;
-    if (input == "decrypt") return Command::Decrypt;
+    if (input == "encrypt") return Command::Encrypt;  
     return Command::Unknown;
 }
 
@@ -262,16 +261,17 @@ void copyToClipboard(const std::string& text){
 }
 
 int main() {
-    std::string encryption_key,symbol,last_output,input,to_encrypt,to_decrypt;
+    std::string encryption_key,symbol,input,last_output,to_encrypt,to_decrypt;
+    
     while (true) {
         std::cout << "Enter command (Commands for all): ";
-        std::getline(std::cin, input);
-
+        std::cin>>input;
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         switch (getCommand(input)) {
             case Command::Exit:
                 return 0;
             case Command::Commands:{
-                std::cout << "Enter: \n'encrypt' to encrypt,\n'copy' to copy last output,\n'exit' to quit,\n ";
+                std::cout << "Enter: \n'encrypt' to encrypt,\n'copy' to copy last output,\n'decrypt' to decrypt,\n'exit' to quit,\n ";
                 break;
             }
             case Command::Copy:
@@ -285,7 +285,8 @@ int main() {
 
             case Command::Encrypt:
                 std::cout<<"Enter what is to be encrypted: ";
-                std::cin>>to_encrypt;
+                std::getline(std::cin,to_encrypt);
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                 std::cout<<"Enter key for encryption: ";
                 std::cin>>encryption_key;
                 std::cout<<"Enter symbol for encryption: ";
@@ -296,7 +297,8 @@ int main() {
 
             case Command::Decrypt:
                 std::cout<<"Enter what is to be decrypted: ";
-                std::cin>>to_decrypt;
+                std::getline(std::cin,to_decrypt);
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                 std::cout<<"Enter key for decryption: ";
                 std::cin>>encryption_key;
                 std::cout<<"Enter symbol for decryption: ";
