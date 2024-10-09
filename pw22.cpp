@@ -9,9 +9,9 @@
 #include <cctype>
 #include <cstdlib>
 #include <iomanip>
-#include  <bits/stdc++.h>
+#include <bits/stdc++.h>
 
-//TODO 1.Make get_key symbol (/ utt.) conversion to decimal
+//TODO 1.Make get_key symbol (/ utt.) conversion to decimal (Maybe done)
 //TODO 3.Add function to customize operations with to_encrypt/to_decrypt (Save operations in a list in a seperate file)
 std::string replace_equal_digits(int keyd_,int last_int_of_key_,std::string symbol){//makes a function for equal ints in the encrypted string to be replaced by a symbol
     std::string keyd_string = std::to_string(keyd_);//converts one encrypted hexadeciaml part of the whole encrypted string to a stringstd::string symbol = "@";
