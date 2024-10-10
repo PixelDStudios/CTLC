@@ -15,12 +15,63 @@ enum class Command{
     Read,
     Add,
     Overwrite,
+    Implement,
     Unknown
 };
+
+std::string hexed(std::vector<std::string> commands){
+    int to_encrypt_0=2,int_amount=0;
+    std::string command;
+    for(std::string s:commands){
+        std::stringstream int_type_string;
+        int_amount=0;
+        int string_len = s.length();
+        for(char ch:s){
+            if(isdigit(ch)){
+                int_type_string<<ch;
+                int_amount+=1;
+            }
+            else{
+                break;
+            }
+        }
+        int value = std::stoi(int_type_string.str());
+        if(s=="multiply"){
+            command = "multiply";
+        }
+        if(s=="divide"){
+            command = "divide";
+        }
+        if(s=="addition"){
+            command = "addition";
+        }
+        if(s=="subtract"){
+            command = "subtract";
+        }
+        else if(int_amount==string_len){
+            if(command=="multiply"){
+                to_encrypt_0 = to_encrypt_0*value;
+            }
+            if(command=="subtract"){
+                to_encrypt_0 = to_encrypt_0-value;
+            }
+            if(command=="addition"){
+                to_encrypt_0 = to_encrypt_0+value;
+            }
+            if(command=="divide"){
+                to_encrypt_0 = to_encrypt_0/value;
+            }
+        }
+    }
+
+    return std::to_string(to_encrypt_0);
+}
+
 Command getCommand(const std::string& choice_) {
     if (choice_ == "read") return Command::Read;  
     if (choice_ == "overwrite") return Command::Overwrite;
-    if (choice_ == "add") return Command::Add;    
+    if (choice_ == "add") return Command::Add;
+    if (choice_ == "implement") return Command::Implement;
     return Command::Unknown;
 }
 int main(){
@@ -48,6 +99,24 @@ int main(){
                 
                 break;
             }
+            case Command::Implement:{
+                std::ifstream command_file_0("commands.txt");
+                while(std::getline(command_file_0,read_string)){
+                    std::cout<<read_string;
+                }
+                std::vector<std::string> encr_commands;
+                std::stringstream word;
+                for(char c:read_string){
+                    if(c==' '){
+                        encr_commands.push_back(word.str());
+                        word.str("");
+                    }
+                    word<<c;
+                }
+                command_file_0.close(); 
+                
+                break;
+            }
             case Command::Overwrite:{
                 std::getline(std::cin,input);
                 std::ofstream command_file_0("commands.txt");
@@ -66,9 +135,14 @@ int main(){
                 
                 break;
             }
-
+            default:{
+                std::cout<<"Invalid command"<<"\n";
+                break;
+            }
         }
+
     }
+}
     
     
     
@@ -91,4 +165,4 @@ int main(){
     }
     command_file_0.close();
     */
-}
+
