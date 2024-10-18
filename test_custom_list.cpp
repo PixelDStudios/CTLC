@@ -23,51 +23,57 @@ std::string hexed(std::vector<std::string> commands){
     int to_encrypt_0=2,int_amount=0, number_char_count = 0,value=1;
     std::string command;
     for(std::string s:commands){
-        //TODO remove " " from s
+        
         std::stringstream int_type_string;
         int_amount=0;
-        char first_char_num = s[1];
-        if(isdigit(first_char_num)){
-            for(char ch:s){
-            
-                if(isdigit(ch)){
-                    int_type_string<<ch;
-                    value = std::stoi(int_type_string.str());
-                    number_char_count+=1;
-                    int_amount+=1;
-                }
-                else if(!isdigit(ch)&&number_char_count>0){
-                    break;
-                }
-
+        std::stringstream remove_space;
+        for(char sh:s){
+            if(sh!=' '){
+                remove_space<<sh;
             }
         }
+        s = remove_space.str();
+        
+        for(char ch:s){
+        
+            if(isdigit(ch)){
+                int_type_string<<ch;
+                value = std::stoi(int_type_string.str());
+                number_char_count+=1;
+                int_amount+=1;
+            }
+            else if(!isdigit(ch)&&number_char_count>0){
+                break;
+            }
+
+        }
         
         
-        else if(s=="mul"){
-            command = "mul";
+        
+        if(s=="*"){
+            command = "*";
         }
-        else if(s=="div"){
-            command = "div";
+        else if(s=="/"){
+            command = "/";
         }
-        else if(s=="add"){
-            command = "add";
+        else if(s=="+"){
+            command = "+";
         }
-        else if(s=="sub"){
-            command = "sub";
+        else if(s=="-"){
+            command = "-";
         }
         if(int_amount>0){
-            if(command=="mul"){
+            if(command=="*"){
                 to_encrypt_0 = to_encrypt_0*value;
                 
             }
-            if(command=="sub"){
+            if(command=="-"){
                 to_encrypt_0 = to_encrypt_0-value;
             }
-            if(command=="add"){
+            if(command=="+"){
                 to_encrypt_0 = to_encrypt_0+value;
             }
-            if(command=="div"){
+            if(command=="/"){
                 to_encrypt_0 = to_encrypt_0/value;
             }
             int_amount = 0;
@@ -80,7 +86,7 @@ std::string hexed(std::vector<std::string> commands){
 Command getCommand(const std::string& choice_) {
     if (choice_ == "read") return Command::Read;  
     if (choice_ == "overwrite") return Command::Overwrite;
-    if (choice_ == "addition") return Command::Addition;
+    if (choice_ == "+ition") return Command::Addition;
     if (choice_ == "implement") return Command::Implement;
     return Command::Unknown;
 }
