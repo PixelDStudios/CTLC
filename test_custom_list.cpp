@@ -13,54 +13,64 @@
 
 enum class Command{
     Read,
-    Add,
+    Addition,
     Overwrite,
     Implement,
     Unknown
 };
 
 std::string hexed(std::vector<std::string> commands){
-    int to_encrypt_0=2,int_amount=0;
+    int to_encrypt_0=2,int_amount=0, number_char_count = 0,value=1;
     std::string command;
     for(std::string s:commands){
+        //TODO remove " " from s
         std::stringstream int_type_string;
         int_amount=0;
-        int string_len = s.length();
-        for(char ch:s){
-            if(isdigit(ch)){
-                int_type_string<<ch;
-                int_amount+=1;
+        char first_char_num = s[1];
+        if(isdigit(first_char_num)){
+            for(char ch:s){
+            
+                if(isdigit(ch)){
+                    int_type_string<<ch;
+                    value = std::stoi(int_type_string.str());
+                    number_char_count+=1;
+                    int_amount+=1;
+                }
+                else if(!isdigit(ch)&&number_char_count>0){
+                    break;
+                }
+
             }
-            else{
-                break;
-            }
         }
-        int value = std::stoi(int_type_string.str());
-        if(s=="multiply"){
-            command = "multiply";
+        
+        
+        else if(s=="mul"){
+            command = "mul";
         }
-        if(s=="divide"){
-            command = "divide";
+        else if(s=="div"){
+            command = "div";
         }
-        if(s=="addition"){
-            command = "addition";
+        else if(s=="add"){
+            command = "add";
         }
-        if(s=="subtract"){
-            command = "subtract";
+        else if(s=="sub"){
+            command = "sub";
         }
-        else if(int_amount==string_len){
-            if(command=="multiply"){
+        if(int_amount>0){
+            if(command=="mul"){
                 to_encrypt_0 = to_encrypt_0*value;
+                
             }
-            if(command=="subtract"){
+            if(command=="sub"){
                 to_encrypt_0 = to_encrypt_0-value;
             }
-            if(command=="addition"){
+            if(command=="add"){
                 to_encrypt_0 = to_encrypt_0+value;
             }
-            if(command=="divide"){
+            if(command=="div"){
                 to_encrypt_0 = to_encrypt_0/value;
             }
+            int_amount = 0;
         }
     }
 
@@ -70,7 +80,7 @@ std::string hexed(std::vector<std::string> commands){
 Command getCommand(const std::string& choice_) {
     if (choice_ == "read") return Command::Read;  
     if (choice_ == "overwrite") return Command::Overwrite;
-    if (choice_ == "add") return Command::Add;
+    if (choice_ == "addition") return Command::Addition;
     if (choice_ == "implement") return Command::Implement;
     return Command::Unknown;
 }
@@ -114,7 +124,7 @@ int main(){
                     word<<c;
                 }
                 command_file_0.close(); 
-                
+                std::cout<<hexed(encr_commands);
                 break;
             }
             case Command::Overwrite:{
@@ -126,7 +136,7 @@ int main(){
                 
                 break;
             }
-            case Command::Add:{
+            case Command::Addition:{
                 std::getline(std::cin,input);
                 std::ofstream command_file_0("commands.txt",std::ios::app);
         

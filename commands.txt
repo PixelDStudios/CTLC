@@ -1,1 +1,1 @@
-js
+mul 9 sub 10 
