@@ -10,6 +10,7 @@
 #include <iomanip>
 
 std::pair<int,int> get_key(std::string key){//sets up a function 
+    int last_int_of_key_1 = key[key.length()-1];
     std::stringstream converted_key;//creates a stringstream for the making of the converted key
     for(char c: key){//loops over the characters inside the key string
         if(isalpha(c)){//checks if the character represents an int
@@ -22,7 +23,10 @@ std::pair<int,int> get_key(std::string key){//sets up a function
             }
             converted_key<<sum;
         }
-        if(isdigit(c)){
+        else if(isdigit(c)&&c==last_int_of_key_1){
+            converted_key<<c*3;
+        }
+        else{
             converted_key<<c;
         }
     }
@@ -31,7 +35,6 @@ std::pair<int,int> get_key(std::string key){//sets up a function
     int key_for_use = std::stoi(acquired_key);
     return std::make_pair(last_int_of_key,key_for_use);
 }
-
 int main(){
     std::pair<int,int> gotten_keys = get_key("px7");
     int key = gotten_keys.second;

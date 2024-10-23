@@ -129,6 +129,7 @@ int main(){
                     }
                     word<<c;
                 }
+                encr_commands.push_back(" ");
                 command_file_0.close(); 
                 std::cout<<hexed(encr_commands);
                 break;

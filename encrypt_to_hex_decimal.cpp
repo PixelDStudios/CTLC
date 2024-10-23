@@ -1,3 +1,4 @@
+#include <windows.h>
 #include <iostream>
 #include <cstring>
 #include <string>
@@ -8,7 +9,8 @@
 #include <cctype>
 #include <cstdlib>
 #include <iomanip>
-
+#include <bits/stdc++.h>
+#include <cmath>
 
 
 
@@ -29,44 +31,53 @@ std::string replace_equal_digits(int keyd_,int last_int_of_key_){//makes a funct
 }
 
 
-std::string encrypt_to_hex_decimal(std::string to_encrypt, std::string key){//main function to encrypt the "to_encrypt" text with the "key" as the key
-    std::stringstream end_string;//sets up a stringstream in which all of the encrypted parts of the text will be inserted into
+std::string encrypt_to_hex_decimal(std::string to_encrypt, std::string key,std::string symbol){//main function to encrypt the "to_decrypt" text with the "key" as the key
+    std::stringstream end_string;//sets up a stringstream in which all of the encrypted parts of the text will be inserted doubleo
     std::stringstream converted_to_hex;//sets up a seperate stringstream in which all of the characters of the original string will be converted to hex
     
     
-    
-    int og_size = to_encrypt.length();//saves the size of the og string to be used later in decryption
-    
+    /*
+    double og_size = to_encrypt.length();//saves the size of the og string to be used later in decryption
+    */
     for(char character:to_encrypt){//loops over the characters in the original string
-        converted_to_hex<<std::hex<<std::setw(2)<<std::setfill('0')<<static_cast<int>(static_cast<unsigned char>(character));//formats a hex value of a max length of 2 with the filler being 0 and first casts character to unsigned char and then to an int
+        converted_to_hex<<std::hex<<std::setw(2)<<std::setfill('0')<<static_cast<double>(static_cast<unsigned char>(character));//formats a hex value of a max length of 2 with the filler being 0 and first casts character to unsigned char and then to an double
     }
-    to_encrypt = converted_to_hex.str();//replaces the original "to_encrypt" string with the newly converted hex string
+    to_encrypt = converted_to_hex.str();//replaces the original "to_decrypt" string with the newly converted hex string
     
     
-    int last_int_of_key = 7;
-    int key_for_use = 437;
-    //converts the character in char_list into an int
-    int extra_encr = 1;
-    if(og_size>1){
-        for(int i = 0;i<og_size-1;i++){
+    double last_double_of_key = 7;
+    double key_for_use = 27422399;
+    //converts the character in char_list doubleo an double
+    double extra_encr = 1;
+    if(to_encrypt.length()>1){
+        
+        for(double i = 0;i<to_encrypt.length()*2-1;i++){
             if(i<to_encrypt.size()-1){
                 if(isdigit(to_encrypt[i])){
                     if(isdigit(to_encrypt[i+1])){
-                        int num_1 = (to_encrypt[i] - '0') * 10;
-                        int num_2 =  (to_encrypt[i + 1] - '0') * (i+1) ;
+
+                        double num_1 = (to_encrypt[i] - '0') * key_for_use;
+                            
+                       
+                        double num_2 =  (to_encrypt[i + 1] - '0') * (i+1);
+                        
+                        
                         end_string<<num_1<<"&"<<num_2<<"_";
                         i++;
                     }
                     if(isalpha(to_encrypt[i+1])){
-                        if(key_for_use%2==0){
+                        if(std::fmod(key_for_use, 2.0)==0){
                             extra_encr = 3;
                         }
                         else{
                             extra_encr = 2;
                         }
-                        int keyd = to_encrypt[i]*key_for_use*extra_encr*(i+1);
+                        double keyd = (to_encrypt[i] - '0')*key_for_use;
+
+                        keyd = keyd *extra_encr;
+                        keyd = keyd *(i+extra_encr);
                         
-                        std::string keyd_gone_over = replace_equal_digits(keyd,last_int_of_key);
+                        std::string keyd_gone_over = replace_equal_digits(keyd,last_double_of_key);
                         end_string<<keyd_gone_over<<to_encrypt[i+1];
                         
                         i++;
@@ -82,7 +93,7 @@ std::string encrypt_to_hex_decimal(std::string to_encrypt, std::string key){//ma
         std::cout<<"Error: password too short";
     }
     std::string pre_final = end_string.str();
-    end_string<<"*"<<og_size;
+    end_string<<"*";
     
     std::string final_result = end_string.str();
     
@@ -103,7 +114,7 @@ int main(){
         std::cout<<"Enter what is to be encrypted: ";
         std::string to_encrypt;
         std::cin>>to_encrypt;
-        std::cout<<encrypt_to_hex_decimal(to_encrypt,encryption_key)<<"\n";
+        std::cout<<encrypt_to_hex_decimal(to_encrypt,encryption_key,"@")<<"\n";
         system("pause");
     }
 }
